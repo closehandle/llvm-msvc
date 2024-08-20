@@ -33,7 +33,7 @@ jobs:
             -DLLVM_INCLUDE_TESTS=OFF `
             -DLLVM_INCLUDE_EXAMPLES=OFF `
             -DLLVM_ENABLE_PROJECTS="clang;lld;lldb" `
-            -DCMAKE_INSTALL_PREFIX="$(-Join((Get-Location).Path, '\release'))" `
+            -DCMAKE_INSTALL_PREFIX="$(-Join((Get-Location).Path, '\..\release'))" `
             -DLLVM_ENABLE_LIBXML2=OFF `
             -DLLVM_ENABLE_ZLIB=OFF `
             -DLLVM_TARGETS_TO_BUILD=X86 `
