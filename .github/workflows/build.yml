@@ -36,7 +36,7 @@ jobs:
             -DLLVM_ENABLE_PROJECTS="clang;lld;lldb" `
             -DLLVM_INCLUDE_TESTS=OFF `
             -DLLVM_INCLUDE_EXAMPLES=OFF `
-            -DLLVM_INCLUDE_BENCHMARKS=OFF ·
+            -DLLVM_INCLUDE_BENCHMARKS=OFF `
             -DLLVM_OBFUSCATION_LINK_INTO_TOOLS=ON `
             -DLLVM_TARGETS_TO_BUILD=X86 `
             -DLLVM_TOOL_LLVM_SHLIB_BUILD=OFF `
