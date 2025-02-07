@@ -1,8 +1,7 @@
-name: build
 on:
   workflow_dispatch:
-  push:
-    branches: [ "main" ]
+
+name: build
 
 jobs:
   build:
@@ -24,22 +23,22 @@ jobs:
           cmake `
             .. `
             -G 'Visual Studio 17 2022' `
-            -A X64 `
+            -A x64 `
             -DCMAKE_C_FLAGS='/utf-8' `
             -DCMAKE_CXX_FLAGS='/utf-8' `
-            -DCMAKE_BUILD_TYPE=release `
+            -DCMAKE_BUILD_TYPE=Release `
             -DCMAKE_INSTALL_PREFIX="$(-Join((Get-Location).Path, '\..\release'))" `
-            -DHAVE_STD_IS_TRIVIALLY_COPYABLE=0 `
+            -DHAVE_STD_IS_TRIVIALLY_COPYABLE=0 -DLLVM_TOOL_LLVM_SHLIB_BUILD=OFF `
             -DLLDB_ENABLE_PYTHON=OFF `
             -DLLVM_ENABLE_ZLIB=OFF `
             -DLLVM_ENABLE_LIBXML2=OFF `
+            -DLLVM_ENABLE_RPMALLOC=ON `
             -DLLVM_ENABLE_PROJECTS="clang;lld;lldb" `
             -DLLVM_INCLUDE_TESTS=OFF `
             -DLLVM_INCLUDE_EXAMPLES=OFF `
             -DLLVM_INCLUDE_BENCHMARKS=OFF `
             -DLLVM_OBFUSCATION_LINK_INTO_TOOLS=ON `
-            -DLLVM_TARGETS_TO_BUILD=X86 `
-            -DLLVM_TOOL_LLVM_SHLIB_BUILD=OFF `
+            -DLLVM_TARGETS_TO_BUILD="X86;AArch64" `
             -DLLVM_USE_CRT_RELEASE=MT `
             ..\llvm
           msbuild `
