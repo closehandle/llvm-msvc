@@ -23,7 +23,7 @@ jobs:
         shell: pwsh
         run: |
           cmake -GNinja -Bbuild \
-            -DCMAKE_INSTALL_PREFIX=release \
+            -DCMAKE_INSTALL_PREFIX=install \
             -DLLVM_INCLUDE_TESTS=OFF \
             -DLLVM_INCLUDE_TOOLS=ON \
             -DLLVM_INCLUDE_EXAMPLES=OFF \
@@ -43,10 +43,10 @@ jobs:
       - name: Build
         run: |
           cmake -GNinja -Bruntimes-build \
-          -DCMAKE_INSTALL_PREFIX=release \
+          -DCMAKE_INSTALL_PREFIX=install \
           -DLLVM_ENABLE_RUNTIMES="libcxx;libcxxabi;libunwind" \
-          -DCMAKE_C_COMPILER=$(pwd)/release/bin/clang \
-          -DCMAKE_CXX_COMPILER=$(pwd)/release/bin/clang++ \
+          -DCMAKE_C_COMPILER=$(pwd)/install/bin/clang \
+          -DCMAKE_CXX_COMPILER=$(pwd)/install/bin/clang++ \
           -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=lld" \
           -DCMAKE_SHARED_LINKER_FLAGS="-fuse-ld=lld" \
           -DCMAKE_C_COMPILER_TARGET="aarch64-none-elf" \
@@ -63,7 +63,7 @@ jobs:
       - name: Build
         run: |
           cmake -GNinja -Bcompiler-rt-build \
-          -DCMAKE_INSTALL_PREFIX=release \
+          -DCMAKE_INSTALL_PREFIX=install \
           -DCOMPILER_RT_BUILD_BUILTINS=ON \
           -DCOMPILER_RT_BUILD_LIBFUZZER=OFF \
           -DCOMPILER_RT_BUILD_MEMPROF=ON \
@@ -76,11 +76,11 @@ jobs:
           -DCMAKE_ASM_COMPILER_TARGET="aarch64-none-elf" \
           -DCMAKE_C_COMPILER_TARGET="aarch64-none-elf" \
           -DCMAKE_CXX_COMPILER_TARGET="aarch64-none-elf" \
-          -DCMAKE_C_COMPILER=$(pwd)/release/bin/clang \
-          -DCMAKE_CXX_COMPILER=$(pwd)/release/bin/clang++ \
-          -DLLVM_CONFIG_PATH=$(pwd)/release/bin/llvm-config \
-          -DCMAKE_AR=$(pwd)/release/bin/llvm-ar \
-          -DCMAKE_NM=$(pwd)/release/bin/llvm-nm \
+          -DCMAKE_C_COMPILER=$(pwd)/install/bin/clang \
+          -DCMAKE_CXX_COMPILER=$(pwd)/install/bin/clang++ \
+          -DLLVM_CONFIG_PATH=$(pwd)/install/bin/llvm-config \
+          -DCMAKE_AR=$(pwd)/install/bin/llvm-ar \
+          -DCMAKE_NM=$(pwd)/install/bin/llvm-nm \
           -DCMAKE_CXX_COMPILER_WORKS=1 \
           -DCMAKE_CXX_COMPILER_ID=Clang \
           -DLIBCXX_INCLUDE_BENCHMARKS=OFF \
@@ -93,8 +93,8 @@ jobs:
       - name: Final
         uses: actions/upload-artifact@v4
         with:
-          name: release
-          path: release
+          name: aarch64-non-elf
+          path: install
           if-no-files-found: error
 
 concurrency:

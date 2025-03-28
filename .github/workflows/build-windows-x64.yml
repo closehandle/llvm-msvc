@@ -51,7 +51,7 @@ jobs:
       - name: Final
         uses: actions/upload-artifact@v4
         with:
-          name: release
+          name: windows-x64
           path: release
           if-no-files-found: error
 
