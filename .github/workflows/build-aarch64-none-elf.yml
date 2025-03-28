@@ -1,7 +1,7 @@
 on:
   workflow_dispatch:
 
-name: build
+name: 'Aarch64 None ELF'
 
 jobs:
   build:
