@@ -60,7 +60,7 @@ jobs:
           cmake --build runtimes-build --config Release
           cmake --build runtimes-build --config Release --target install
 
-      - name: Build compiler-rt
+      - name: Build
         run: |
           cmake -GNinja -Bcompiler-rt-build \
           -DCMAKE_INSTALL_PREFIX=release \
