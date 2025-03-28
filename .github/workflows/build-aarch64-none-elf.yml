@@ -15,9 +15,9 @@ jobs:
 
       - name: Setup
         run: |
-          apt update
-          apt install build-essential ninja-build p7zip-full cmake make -y
-          apt install libstdc++-10-dev-arm64-cross g++-10-aarch64-linux-gnu g++-10 gcc-10 -y
+          sudo apt update
+          sudo apt install build-essential ninja-build p7zip-full cmake make -y
+          sudo apt install libstdc++-10-dev-arm64-cross g++-10-aarch64-linux-gnu g++-10 gcc-10 -y
 
       - name: Build
         shell: pwsh
