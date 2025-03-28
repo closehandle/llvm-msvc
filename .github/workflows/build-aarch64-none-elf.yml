@@ -1,0 +1,102 @@
+on:
+  workflow_dispatch:
+
+name: build
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: killvxk/llvm-msvc-ex
+          submodules: recursive
+
+      - name: Setup
+        run: |
+          apt update
+          apt install build-essential ninja-build p7zip-full cmake make -y
+          apt install libstdc++-10-dev-arm64-cross g++-10-aarch64-linux-gnu g++-10 gcc-10 -y
+
+      - name: Build
+        shell: pwsh
+        run: |
+          cmake -GNinja -Bbuild \
+            -DCMAKE_INSTALL_PREFIX=release \
+            -DLLVM_INCLUDE_TESTS=OFF \
+            -DLLVM_INCLUDE_TOOLS=ON \
+            -DLLVM_INCLUDE_EXAMPLES=OFF \
+            -DLLVM_ENABLE_ASSERTIONS=OFF \
+            -DLLDB_ENABLE_PYTHON=OFF \
+            -DLLVM_ENABLE_LIBXML2=OFF \
+            -DLLVM_ENABLE_ZLIB=OFF \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DLLVM_TARGET_ARCH=AArch64 \
+            -DLLVM_TARGETS_TO_BUILD="X86;ARM;AArch64;Mips;RISCV" \
+            -DLLVM_ENABLE_PROJECTS="clang;lld;lldb;clang-tools-extra" \
+            -DLLVM_HOST_TRIPLE="x86_64-pc-linux-gnu" \
+            -DLLVM_TARGET_TRIPLE="aarch64-none-elf" \
+            -DLLVM_DEFAULT_TARGET_TRIPLE="aarch64-none-elf" \
+            llvm
+
+      - name: Build
+        run: |
+          cmake -GNinja -Bruntimes-build \
+          -DCMAKE_INSTALL_PREFIX=release \
+          -DLLVM_ENABLE_RUNTIMES="libcxx;libcxxabi;libunwind" \
+          -DCMAKE_C_COMPILER=$(pwd)/release/bin/clang \
+          -DCMAKE_CXX_COMPILER=$(pwd)/release/bin/clang++ \
+          -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=lld" \
+          -DCMAKE_SHARED_LINKER_FLAGS="-fuse-ld=lld" \
+          -DCMAKE_C_COMPILER_TARGET="aarch64-none-elf" \
+          -DCMAKE_CXX_COMPILER_TARGET="aarch64-none-elf" \
+          -DCMAKE_C_FLAGS="-Wno-error -std=gnu11" \
+          -DCMAKE_CXX_FLAGS="-Wno-error -std=c++20" \
+          -DCMAKE_CXX_COMPILER_WORKS=1 \
+          -DCMAKE_CXX_COMPILER_ID=Clang \
+          -DLIBCXX_INCLUDE_BENCHMARKS=OFF \
+          runtimes
+          cmake --build runtimes-build --config Release
+          cmake --build runtimes-build --config Release --target install
+
+      - name: Build compiler-rt
+        run: |
+          cmake -GNinja -Bcompiler-rt-build \
+          -DCMAKE_INSTALL_PREFIX=release \
+          -DCOMPILER_RT_BUILD_BUILTINS=ON \
+          -DCOMPILER_RT_BUILD_LIBFUZZER=OFF \
+          -DCOMPILER_RT_BUILD_MEMPROF=ON \
+          -DCOMPILER_RT_BUILD_PROFILE=ON \
+          -DCOMPILER_RT_BUILD_SANITIZERS=ON \
+          -DCOMPILER_RT_BUILD_XRAY=ON \
+          -DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON \
+          -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=lld" \
+          -DCMAKE_SHARED_LINKER_FLAGS="-fuse-ld=lld" \
+          -DCMAKE_ASM_COMPILER_TARGET="aarch64-none-elf" \
+          -DCMAKE_C_COMPILER_TARGET="aarch64-none-elf" \
+          -DCMAKE_CXX_COMPILER_TARGET="aarch64-none-elf" \
+          -DCMAKE_C_COMPILER=$(pwd)/release/bin/clang \
+          -DCMAKE_CXX_COMPILER=$(pwd)/release/bin/clang++ \
+          -DLLVM_CONFIG_PATH=$(pwd)/release/bin/llvm-config \
+          -DCMAKE_AR=$(pwd)/release/bin/llvm-ar \
+          -DCMAKE_NM=$(pwd)/release/bin/llvm-nm \
+          -DCMAKE_CXX_COMPILER_WORKS=1 \
+          -DCMAKE_CXX_COMPILER_ID=Clang \
+          -DLIBCXX_INCLUDE_BENCHMARKS=OFF \
+          -DCMAKE_C_FLAGS="-Wno-error -std=gnu11" \
+          -DCMAKE_CXX_FLAGS="-Wno-error -std=c++20" \
+          compiler-rt
+          cmake --build compiler-rt-build --config Release
+          cmake --build compiler-rt-build --config Release --target install
+
+      - name: Final
+        uses: actions/upload-artifact@v4
+        with:
+          name: release
+          path: release
+          if-no-files-found: error
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
