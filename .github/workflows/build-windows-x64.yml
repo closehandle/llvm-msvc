@@ -11,6 +11,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: killvxk/llvm-msvc-ex
+          submodules: recursive
 
       - name: MSBuild
         uses: microsoft/setup-msbuild@v2
