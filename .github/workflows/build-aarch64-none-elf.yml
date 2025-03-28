@@ -38,6 +38,8 @@ jobs:
             -DLLVM_TARGET_TRIPLE="aarch64-none-elf" \
             -DLLVM_DEFAULT_TARGET_TRIPLE="aarch64-none-elf" \
             llvm
+            cmake --build build --config Release
+            cmake --build build --config Release --target install
 
       - name: Build
         run: |
