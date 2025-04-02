@@ -31,12 +31,12 @@ jobs:
             -DLLVM_ENABLE_PROJECTS='lld;lldb;clang;clang-tools-extra' \
             -DLLVM_ENABLE_RPMALLOC=ON \
             -DLLVM_ENABLE_ZLIB=OFF \
-            -DLLVM_HOST_TRIPLE='x86_64-pc-linux-gnu' \
             -DLLVM_INCLUDE_BENCHMARKS=OFF \
             -DLLVM_INCLUDE_EXAMPLES=OFF \
             -DLLVM_INCLUDE_TESTS=OFF \
             -DLLVM_INCLUDE_TOOLS=ON \
             -DLLVM_OBFUSCATION_LINK_INTO_TOOLS=ON \
+            -DLLVM_HOST_TRIPLE='x86_64-pc-linux-gnu' \
             -DLLVM_TARGET_ARCH=AArch64 \
             -DLLVM_TARGET_TRIPLE='aarch64-none-elf' \
             -DLLVM_DEFAULT_TARGET_TRIPLE='aarch64-none-elf' \
