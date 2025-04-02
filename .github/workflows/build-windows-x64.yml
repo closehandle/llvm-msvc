@@ -20,7 +20,6 @@ jobs:
         shell: pwsh
         run: |
           cmake `
-            .. `
             -G 'Visual Studio 17 2022' `
             -A x64 `
             -B build `
@@ -28,18 +27,19 @@ jobs:
             -DCMAKE_CXX_FLAGS='/utf-8' `
             -DCMAKE_BUILD_TYPE=Release `
             -DCMAKE_INSTALL_PREFIX='release' `
-            -DHAVE_STD_IS_TRIVIALLY_COPYABLE=0 -DLLVM_TOOL_LLVM_SHLIB_BUILD=OFF `
+            -DHAVE_STD_IS_TRIVIALLY_COPYABLE=0 ·
             -DLLDB_ENABLE_PYTHON=OFF `
-            -DLLVM_ENABLE_ZLIB=OFF `
             -DLLVM_ENABLE_LIBXML2=OFF `
+            -DLLVM_ENABLE_PROJECTS='lld;lldb;clang;clang-tools-extra' `
             -DLLVM_ENABLE_RPMALLOC=ON `
-            -DLLVM_ENABLE_PROJECTS="lld;lldb;clang;clang-tools-extra" `
+            -DLLVM_ENABLE_ZLIB=OFF `
+            -DLLVM_INCLUDE_BENCHMARKS=OFF `
+            -DLLVM_INCLUDE_EXAMPLES=OFF `
             -DLLVM_INCLUDE_TESTS=OFF `
             -DLLVM_INCLUDE_TOOLS=ON `
-            -DLLVM_INCLUDE_EXAMPLES=OFF `
-            -DLLVM_INCLUDE_BENCHMARKS=OFF `
             -DLLVM_OBFUSCATION_LINK_INTO_TOOLS=ON `
             -DLLVM_TARGETS_TO_BUILD='X86' `
+            -DLLVM_TOOL_LLVM_SHLIB_BUILD=OFF `
             -DLLVM_USE_CRT_RELEASE=MT `
             llvm
           cmake --build build --config Release --verbose

@@ -39,8 +39,8 @@ jobs:
             -DLLVM_HOST_TRIPLE='x86_64-pc-linux-gnu' \
             -DLLVM_TARGET_ARCH='AArch64' \
             -DLLVM_TARGET_TRIPLE='aarch64-none-elf' \
-            -DLLVM_DEFAULT_TARGET_TRIPLE='aarch64-none-elf' \
             -DLLVM_TARGETS_TO_BUILD='AArch64' \
+            -DLLVM_DEFAULT_TARGET_TRIPLE='aarch64-none-elf' \
             llvm
           cmake --build build --config Release --verbose
           cmake --build build --config Release --target install --verbose
