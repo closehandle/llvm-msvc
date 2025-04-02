@@ -1,4 +1,5 @@
 on:
+  push:
   workflow_dispatch:
 
 name: aarch64-none-elf
@@ -29,7 +30,7 @@ jobs:
             -DLLDB_ENABLE_PYTHON=OFF \
             -DLLVM_ENABLE_LIBXML2=OFF \
             -DLLVM_ENABLE_PROJECTS='lld;lldb;clang;clang-tools-extra' \
-            -DLLVM_ENABLE_RPMALLOC=ON \
+            -DLLVM_ENABLE_RPMALLOC=OFF \
             -DLLVM_ENABLE_ZLIB=OFF \
             -DLLVM_INCLUDE_BENCHMARKS=OFF \
             -DLLVM_INCLUDE_EXAMPLES=OFF \
