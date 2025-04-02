@@ -1,7 +1,7 @@
 on:
   workflow_dispatch:
 
-name: 'Aarch64 None ELF'
+name: aarch64-none-elf
 
 jobs:
   build:
@@ -21,32 +21,35 @@ jobs:
 
       - name: Build
         run: |
-          cmake -GNinja -Bbuild \
-            -DCMAKE_INSTALL_PREFIX=install \
-            -DLLVM_INCLUDE_TESTS=OFF \
-            -DLLVM_INCLUDE_TOOLS=ON \
-            -DLLVM_INCLUDE_EXAMPLES=OFF \
-            -DLLVM_ENABLE_ASSERTIONS=OFF \
+          cmake \
+            -G Ninja \
+            -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX='release' \
             -DLLDB_ENABLE_PYTHON=OFF \
             -DLLVM_ENABLE_LIBXML2=OFF \
+            -DLLVM_ENABLE_PROJECTS='lld;lldb;clang;clang-tools-extra' \
+            -DLLVM_ENABLE_RPMALLOC=ON \
             -DLLVM_ENABLE_ZLIB=OFF \
-            -DCMAKE_BUILD_TYPE=Release \
+            -DLLVM_HOST_TRIPLE='x86_64-pc-linux-gnu' \
+            -DLLVM_INCLUDE_BENCHMARKS=OFF \
+            -DLLVM_INCLUDE_EXAMPLES=OFF \
+            -DLLVM_INCLUDE_TESTS=OFF \
+            -DLLVM_INCLUDE_TOOLS=ON \
+            -DLLVM_OBFUSCATION_LINK_INTO_TOOLS=ON \
             -DLLVM_TARGET_ARCH=AArch64 \
-            -DLLVM_TARGETS_TO_BUILD="X86;ARM;AArch64;Mips;RISCV" \
-            -DLLVM_ENABLE_PROJECTS="clang;lld;lldb;clang-tools-extra" \
-            -DLLVM_HOST_TRIPLE="x86_64-pc-linux-gnu" \
-            -DLLVM_TARGET_TRIPLE="aarch64-none-elf" \
-            -DLLVM_DEFAULT_TARGET_TRIPLE="aarch64-none-elf" \
+            -DLLVM_TARGET_TRIPLE='aarch64-none-elf' \
+            -DLLVM_DEFAULT_TARGET_TRIPLE='aarch64-none-elf' \
+            -DLLVM_TARGETS_TO_BUILD='AArch64' \
             llvm
-            cmake --build build --config Release
-            cmake --build build --config Release --target install
+          cmake --build build --config Release --verbose
+          cmake --build build --config Release --target install --verbose
 
       - name: Final
         uses: actions/upload-artifact@v4
         with:
-          name: aarch64-non-elf
-          path: install
-          if-no-files-found: error
+          name: release
+          path: release
 
 concurrency:
   group: ${{ github.workflow }}

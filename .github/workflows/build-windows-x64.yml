@@ -1,7 +1,7 @@
 on:
   workflow_dispatch:
 
-name: 'Windows x64'
+name: 'windows-x64'
 
 jobs:
   build:
@@ -39,7 +39,7 @@ jobs:
             -DLLVM_INCLUDE_EXAMPLES=OFF `
             -DLLVM_INCLUDE_BENCHMARKS=OFF `
             -DLLVM_OBFUSCATION_LINK_INTO_TOOLS=ON `
-            -DLLVM_TARGETS_TO_BUILD='x86' `
+            -DLLVM_TARGETS_TO_BUILD='X86' `
             -DLLVM_USE_CRT_RELEASE=MT `
             llvm
           cmake --build build --config Release --verbose
@@ -48,9 +48,8 @@ jobs:
       - name: Final
         uses: actions/upload-artifact@v4
         with:
-          name: windows-x64
+          name: release
           path: release
-          if-no-files-found: error
 
 concurrency:
   group: ${{ github.workflow }}
