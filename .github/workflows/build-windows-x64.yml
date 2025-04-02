@@ -27,7 +27,7 @@ jobs:
             -DCMAKE_CXX_FLAGS='/utf-8' `
             -DCMAKE_BUILD_TYPE=Release `
             -DCMAKE_INSTALL_PREFIX='release' `
-            -DHAVE_STD_IS_TRIVIALLY_COPYABLE=0 ·
+            -DHAVE_STD_IS_TRIVIALLY_COPYABLE=0 `
             -DLLDB_ENABLE_PYTHON=OFF `
             -DLLVM_ENABLE_LIBXML2=OFF `
             -DLLVM_ENABLE_PROJECTS='lld;lldb;clang;clang-tools-extra' `
