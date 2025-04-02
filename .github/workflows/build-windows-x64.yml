@@ -19,34 +19,31 @@ jobs:
       - name: Build
         shell: pwsh
         run: |
-          New-Item -Force -ItemType Container -Path build
-          Set-Location -Path build
           cmake `
             .. `
             -G 'Visual Studio 17 2022' `
             -A x64 `
+            -B build `
             -DCMAKE_C_FLAGS='/utf-8' `
             -DCMAKE_CXX_FLAGS='/utf-8' `
             -DCMAKE_BUILD_TYPE=Release `
-            -DCMAKE_INSTALL_PREFIX="$(-Join((Get-Location).Path, '\..\release'))" `
+            -DCMAKE_INSTALL_PREFIX='release' `
             -DHAVE_STD_IS_TRIVIALLY_COPYABLE=0 -DLLVM_TOOL_LLVM_SHLIB_BUILD=OFF `
             -DLLDB_ENABLE_PYTHON=OFF `
             -DLLVM_ENABLE_ZLIB=OFF `
             -DLLVM_ENABLE_LIBXML2=OFF `
             -DLLVM_ENABLE_RPMALLOC=ON `
-            -DLLVM_ENABLE_PROJECTS="clang;lld;lldb" `
+            -DLLVM_ENABLE_PROJECTS="lld;lldb;clang;clang-tools-extra" `
             -DLLVM_INCLUDE_TESTS=OFF `
+            -DLLVM_INCLUDE_TOOLS=ON `
             -DLLVM_INCLUDE_EXAMPLES=OFF `
             -DLLVM_INCLUDE_BENCHMARKS=OFF `
             -DLLVM_OBFUSCATION_LINK_INTO_TOOLS=ON `
-            -DLLVM_TARGETS_TO_BUILD="X86;AArch64" `
+            -DLLVM_TARGETS_TO_BUILD='x86' `
             -DLLVM_USE_CRT_RELEASE=MT `
-            ..\llvm
-          msbuild `
-            /m `
-            /p:Configuration=Release `
-            INSTALL.vcxproj
-          Set-Location -Path ..
+            llvm
+          cmake --build build --config Release --verbose
+          cmake --build build --config Release --target install --verbose
 
       - name: Final
         uses: actions/upload-artifact@v4
