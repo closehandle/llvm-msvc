@@ -1,5 +1,7 @@
 on:
   push:
+  schedule:
+    - cron: '0 16 * * 1'
   workflow_dispatch:
 
 name: windows-x64
